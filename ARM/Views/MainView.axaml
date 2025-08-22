@@ -9,6 +9,7 @@
              x:Class="ARM.Views.MainView"
              xmlns:viewModels="clr-namespace:ARM.ViewModels"
              xmlns:conv="clr-namespace:ARM.Converters"
+			 xmlns:models="clr-namespace:ARM.Models"
              x:DataType="viewModels:MainViewModel"
              Background="#DFDFDF">
 
@@ -89,11 +90,12 @@
 							</DataTemplate>
 						</MenuItem.HeaderTemplate>
 						<MenuItem.ItemTemplate>
-							<DataTemplate>
-								<MenuItem Header="{Binding Name}"/>
+							<DataTemplate x:DataType="models:ARMReport">
+								<MenuItem Header="{Binding Name}"
+										  Command="{Binding OpenCommand}"/>
 							</DataTemplate>
 						</MenuItem.ItemTemplate>
-					</MenuItem>					
+					</MenuItem>
 				</Menu>
 
 				<Button Background="Transparent"

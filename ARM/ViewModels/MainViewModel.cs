@@ -11,6 +11,9 @@ using ARM.Services;
 using System.Linq;
 using System;
 using Serilog;
+using System.Threading.Tasks;
+using MsBox.Avalonia;
+using System.Threading.Tasks;using System.Collections.Generic;
 
 namespace ARM.ViewModels;
 
@@ -22,8 +25,10 @@ public partial class MainViewModel : ViewModelBase
     public ICommand OpenSettingsViewCommand => new RelayCommand(OpenSettings);
     public ICommand OpenInfoViewCommand => new RelayCommand(OpenInfo);
     public ICommand OpenSpravocnikCommand => new RelayCommand(OpenSpravocnik);
-    public ICommand OpenReportCommand => new RelayCommand(OpenReport);
+    // public ICommand OpenReportCommand => new RelayCommand(OpenReport);
     //public ICommand OpenReportsCommand => new RelayCommand(OpenReports);
+
+    //public IAsyncRelayCommand<ARMReport> OpenReportCommand => new AsyncRelayCommand<ARMReport>(OpenReport);
 
     private PostModel? _selectedPost;
 
@@ -88,13 +93,24 @@ public partial class MainViewModel : ViewModelBase
     {
         try
         {
-            var reportsFromDb = await _dbService.GetAllReportsAsync();
+            //var reportsFromDb = await _dbService.GetAllReportsAsync();
+
+            var reportsFromDb = (await _dbService.GetAllReportsAsync())
+                ?.Where(r => r != null)
+                .ToList() ?? new List<ARMReport>();
+
+            foreach (var report in reportsFromDb)
+            {
+                var currentReport = report;
+                currentReport.OpenCommand = new AsyncRelayCommand(() => OpenReport(currentReport));
+            }
+
             Reports = new ObservableCollection<ARMReport>(reportsFromDb);
             Log.Information("Отчеты успешно загружены из базы данных");
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Ошибка при загрузке отчетов из базы данных"); // Использование Log
+            Log.Error(ex, "Ошибка при загрузке отчетов из базы данных"); 
         }
     }
 
@@ -127,11 +143,19 @@ public partial class MainViewModel : ViewModelBase
         modal.ShowDialog(window);
     }
 
-    private void OpenReport()
+    private async Task OpenReport(ARMReport? report)
     {
+        if (report == null)
+            return;
         var window = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-        var modal = new SpravocnikPostovView { DataContext = new SpravocnikPostovViewModel(_dbService) };
-        modal.ShowDialog(window);
+
+        string a = report.Name;
+
+        /*var box = MessageBoxManager.GetMessageBoxStandardWindow("Отчет", $"Выбран отчет: {report.Name}");
+        if (window != null)
+            await box.ShowDialog(window);
+        else
+            await box.ShowAsync();*/
     }
 
 

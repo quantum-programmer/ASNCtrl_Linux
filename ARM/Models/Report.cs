@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace ARM.Models
 {
@@ -13,5 +14,6 @@ namespace ARM.Models
     {
         public int ARMReportID { get; set; }
         public string? Name { get; set; }
+        public IAsyncRelayCommand? OpenCommand { get; set; }
     }
 }

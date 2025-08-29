@@ -13,7 +13,8 @@ using System;
 using Serilog;
 using System.Threading.Tasks;
 using MsBox.Avalonia;
-using System.Threading.Tasks;using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace ARM.ViewModels;
 
@@ -93,8 +94,6 @@ public partial class MainViewModel : ViewModelBase
     {
         try
         {
-            //var reportsFromDb = await _dbService.GetAllReportsAsync();
-
             var reportsFromDb = (await _dbService.GetAllReportsAsync())
                 ?.Where(r => r != null)
                 .ToList() ?? new List<ARMReport>();
@@ -147,15 +146,43 @@ public partial class MainViewModel : ViewModelBase
     {
         if (report == null)
             return;
-        var window = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
 
-        string a = report.Name;
+        string arguments = $"cmd=show id={report.ARMReportID}";
 
-        /*var box = MessageBoxManager.GetMessageBoxStandardWindow("Отчет", $"Выбран отчет: {report.Name}");
-        if (window != null)
-            await box.ShowDialog(window);
-        else
-            await box.ShowAsync();*/
+        try
+        {
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"RDesigner\RDesigner.exe",
+                    Arguments = arguments,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                }
+            };
+
+            process.Start();
+
+            string output = await process.StandardOutput.ReadToEndAsync();
+            string error = await process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync();
+
+            Log.Information($"RDesigner запущен с параметрами: {arguments}");
+            Log.Information($"Вывод: {output}");
+
+            if (!string.IsNullOrEmpty(error))
+                Log.Warning($"Ошибки: {error}");
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "Ошибка при запуске RDesigner.exe");
+            var box = MessageBoxManager.GetMessageBoxStandard(
+                "Ошибка", $"Не удалось запустить RDesigner.exe: {ex.Message}");
+            await box.ShowAsync();
+        }
     }
 
 

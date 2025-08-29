@@ -81,7 +81,7 @@
                 </Button>
 
 				<Menu Background="Transparent" Classes="Panel">
-					<MenuItem ItemsSource="{Binding Reports}">
+					<MenuItem Header="Отчеты">
 						<MenuItem.HeaderTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal">
@@ -89,12 +89,14 @@
 								</StackPanel>
 							</DataTemplate>
 						</MenuItem.HeaderTemplate>
-						<MenuItem.ItemTemplate>
-							<DataTemplate x:DataType="models:ARMReport">
-								<MenuItem Header="{Binding Name}"
-										  Command="{Binding OpenCommand}"/>
-							</DataTemplate>
-						</MenuItem.ItemTemplate>
+						<ItemsControl ItemsSource="{Binding Reports}">
+							<ItemsControl.ItemTemplate>
+								<DataTemplate x:DataType="models:ARMReport">
+									<MenuItem Header="{Binding Name}"
+											  Command="{Binding OpenCommand}"/>
+								</DataTemplate>
+							</ItemsControl.ItemTemplate>
+						</ItemsControl>
 					</MenuItem>
 				</Menu>
 

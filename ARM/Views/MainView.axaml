@@ -533,6 +533,9 @@
                             </StackPanel>
                         </Button>
                     </StackPanel>
+
+					<!-- ChatGPT: тебе отсюда начинать -->
+					
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal"
                                     Spacing="-1">
@@ -889,6 +892,7 @@
                         </Button>
                     </StackPanel>
                 </StackPanel>
+				<!-- ChatGPT: тебе до сюда заменять -->
             </Grid>
         </GroupBox>
 

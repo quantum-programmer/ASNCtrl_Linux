@@ -15,7 +15,6 @@
 
     <UserControl.Styles>
         <StyleInclude Source="/Styles/Styles.axaml" />
-		<StyleInclude Source="/Styles/StyleBushes.axaml"/>
     </UserControl.Styles>
 
     <UserControl.Resources>
@@ -504,54 +503,392 @@
                            Grid.ColumnSpan="3"
                            Text="Рабочее состояние"
                            Classes="State" />
+                <StackPanel Grid.Row="2"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5">
+                        <Button Width="144"
+                                Height="40"
+                                HorizontalContentAlignment="Left"
+                                VerticalContentAlignment="Center"
+                                Classes="Permission">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="15">
+                                <TextBlock Text="Разрешение" />
+                                <Svg Path="/Assets/Vector1.svg"
+                                     Height="16" />
+                            </StackPanel>
+                        </Button>
+                        <Button Width="147"
+                                Height="40"
+                                HorizontalContentAlignment="Left"
+                                VerticalContentAlignment="Center"
+                                Classes="Continue">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="30">
+                                <TextBlock Text="Продолж." />
+                                <Svg Path="/Assets/Group965.svg"
+                                     Height="16" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="-1">
+                            <TextBox Width="146" 
+                                     Height="40"
+                                     Text="Минимальная доза присадки"
+                                     HorizontalContentAlignment="Center" 
+                                     VerticalContentAlignment="Center"
+                                     Classes="GroupPost" />
 
-				<!-- 6 кнопок управления -->
-				<ItemsControl Grid.Row="2"
-							  ItemsSource="{Binding ControlButtons}"
-							  Margin="0,10,0,0">
-					<ItemsControl.ItemContainerTheme>
-						<Style>
-							<Setter Property="Grid.DataContext" Value="{Binding}"/>
-						</Style>
-					</ItemsControl.ItemContainerTheme>
-
-					<ItemsControl.ItemsPanel>
-						<ItemsPanelTemplate>
-							<WrapPanel Orientation="Horizontal" Spacing="10"/>
-						</ItemsPanelTemplate>
-					</ItemsControl.ItemsPanel>
-
-					<ItemsControl.ItemTemplate>
-						<DataTemplate>
-							<StackPanel Orientation="Vertical" Spacing="5" Width="200">
-								<Button Content="{Binding ButtonContent}"
-										Command="{Binding DataContext.HideControlButtonCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-										CommandParameter="{Binding}"
-										IsVisible="{Binding IsHiddenButtonVisible}"
-										Height="40"
-										Classes="hidden-button ControlButton"/>
-
-								<StackPanel Orientation="Horizontal"
-											Spacing="5"
-											IsVisible="{Binding IsInputPairVisible}">
-									<TextBox Text="{Binding Text}"
-											 Watermark="{Binding PlaceholderText}"
-											 Width="120"
-											 Height="40"
-											 VerticalContentAlignment="Center"
-											 Classes="GroupPost"/>
-									<Button Content="OK"
-											Command="{Binding DataContext.SaveControlValueCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-											CommandParameter="{Binding}"
-											Width="60"
-											Height="40"
-											Classes="ControlButton"/>
-								</StackPanel>
-							</StackPanel>
-						</DataTemplate>
-					</ItemsControl.ItemTemplate>
-				</ItemsControl>			
-				
+                            <TextBox Width="119" 
+                                     Height="40"
+                                     Text="0,5"
+                                     HorizontalContentAlignment="Center" 
+                                     VerticalContentAlignment="Center"
+                                     Background="#FFFFFF"
+                                     Classes="GroupPost" />
+                            <TextBox MinWidth="33" 
+                                     Width="33" 
+                                     Height="40"
+                                     Text="кг/л³"
+                                     FontSize="11"
+                                     HorizontalContentAlignment="Center" 
+                                     VerticalContentAlignment="Center"
+                                     Background="#FFFFFF"
+                                     Classes="GroupPost" />
+                        </StackPanel>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Заземление"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="рабочее"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="3"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5">
+                        <Button Width="144"
+                                Height="40"
+                                Classes="Pause">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="65">
+                                <TextBlock Text="Пауза" />
+                                <Svg Path="/Assets/Group960.svg"
+                                     Height="16" />
+                            </StackPanel>
+                        </Button>
+                        <Button Width="147"
+                                Height="40"
+                                Classes="Stop">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="40">
+                                <TextBlock Text="Останов." />
+                                <Svg Path="/Assets/Vector2.svg"
+                                     Height="16" />
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Предел. разн. присад."
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="0,7"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 Text="кг/л³"
+                                 FontSize="11"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Заземление"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="не установлено"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="4"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Сумматор объема"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="99999999999"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Режим управления"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="По рецептам"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <Button Width="33" 
+                                Height="40"
+                                Classes="Settings2">
+                            <Svg Path="/Assets/Settings.svg"
+                                 Width="20" 
+                                 Height="20" />
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Переполнение"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="да"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="5"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Фактический объем"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="8964"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Управление треб. расходом"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="По режиму"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <Button Width="33"
+                                Height="40"
+                                Classes="Settings2">
+                            <Svg Path="/Assets/Settings.svg"
+                                 Width="20" 
+                                 Height="20" />
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Copy" />
+                                    <MenuItem Header="Paste" />
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Переполнение"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="да"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox MinWidth="33" 
+                                 Width="33" 
+                                 Height="40"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="6"
+                            Orientation="Horizontal"
+                            Spacing="10">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146"
+                                 Height="40"
+                                 Text="Фактическая масса"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119"
+                                 Height="40"
+                                 Text="8964"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <TextBox Height="40" 
+                                 MinWidth="30" 
+                                 Width="33"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Исправность"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 Text="В ремонте"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <Button Width="33" 
+                                Height="40"
+                                Classes="Settings2">
+                            <Svg Path="/Assets/Settings.svg"
+                                 Width="20"
+                                 Height="20" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Row="7"
+                            Orientation="Horizontal"
+                            Spacing="10"
+                            HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="-1"
+                                Margin="0 0 45 0">
+                        <TextBox Width="146" 
+                                 Height="40"
+                                 Text="Способ загрузки"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Classes="GroupPost" />
+                        <TextBox Width="119" 
+                                 Height="40"
+                                 HorizontalContentAlignment="Center" 
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+                        <Button Width="33" 
+                                Height="40"
+                                Classes="Settings2">
+                            <Svg Path="/Assets/Settings.svg"
+                                 Width="20"
+                                 Height="20" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
             </Grid>
         </GroupBox>
 

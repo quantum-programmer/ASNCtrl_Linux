@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaXaml Remove="Styles\StyleBushes.axaml" />
     <AvaloniaXaml Remove="Styles\Styles2.axaml" />
     <AvaloniaXaml Remove="Views\LoginView.axaml" />
   </ItemGroup>
@@ -61,9 +60,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AvaloniaResource Update="Styles\StyleBushes.axaml">
-      <SubType>Designer</SubType>
-    </AvaloniaResource>
     <AvaloniaResource Update="Styles\Styles2.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>

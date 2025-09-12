@@ -37,55 +37,12 @@ public partial class MainViewModel : ViewModelBase
 
     public ObservableCollection<PostGroupModel> AutoCisternGroups { get; } = new();
     public ObservableCollection<PostGroupModel> DispenserGroups { get; } = new();
-
-    [ObservableProperty]
-    private ObservableCollection<Bushe> _controlButtons = new();
-
+    
     public MainViewModel(IDBService dbService)
     {
         _dbService = dbService;
         LoadPostsAsync();
         LoadListReports();
-        InitializeControlButtons();
-    }
-
-    private void InitializeControlButtons()
-    {
-        var buttonTitles = new[]
-        {
-            "Разрешение",
-            "Продолжить",
-            "Минимальная доза",
-            "Предельная разница",
-            "Режим управления",
-            "Способ загрузки"
-        };
-
-        for (int i = 0; i < 6; i++)
-        {
-            ControlButtons.Add(new Bushe
-            {
-                ButtonContent = buttonTitles[i],
-                PlaceholderText = $"Значение {i + 1}"
-            });
-        }
-    }
-
-    [RelayCommand]
-    private void HideControlButton(Bushe buttonModel)
-    {
-        buttonModel.IsHiddenButtonVisible = false;
-        buttonModel.IsInputPairVisible = true;
-    }
-
-    [RelayCommand]
-    private void SaveControlValue(Bushe buttonModel)
-    {
-        // Логика сохранения введенных данных
-        Console.WriteLine($"Сохранено: {buttonModel.Text} для {buttonModel.ButtonContent}");
-
-        // Здесь можно добавить логику обработки введенных значений
-        // Например, обновление состояния системы
     }
 
     //генерация постов + сайд

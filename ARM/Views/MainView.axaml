@@ -533,19 +533,25 @@
                             </StackPanel>
                         </Button>
                     </StackPanel>
-
-					<!-- ChatGPT: тебе отсюда начинать -->
-					
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Horizontal"
                                     Spacing="-1">
-                            <TextBox Width="146" 
-                                     Height="40"
-                                     Text="Минимальная доза присадки"
-                                     HorizontalContentAlignment="Center" 
-                                     VerticalContentAlignment="Center"
-                                     Classes="GroupPost" />
-
+							<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+							<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+							<Button Width="147"
+									Height="40"
+									HorizontalContentAlignment="Left"
+									VerticalContentAlignment="Center"
+									Classes="Continue">
+								<StackPanel Orientation="Horizontal"
+											Spacing="30">
+									<TextBlock Text="" />
+								</StackPanel>
+							</Button>
+							<!-- Конец метки-->
+                            
+							<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+							<!-- делать видимыми -->
                             <TextBox Width="119" 
                                      Height="40"
                                      Text="0,5"
@@ -562,16 +568,27 @@
                                      VerticalContentAlignment="Center"
                                      Background="#FFFFFF"
                                      Classes="GroupPost" />
+							<!-- конец метки -->
                         </StackPanel>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Заземление"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="рабочее"
@@ -585,6 +602,7 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- конец метки -->
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="3"
@@ -615,12 +633,22 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Предел. разн. присад."
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="0,7"
@@ -637,15 +665,26 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
-                    </StackPanel>
+						<!-- Конец метки-->
+					</StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Заземление"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="не установлено"
@@ -659,6 +698,7 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="4"
@@ -666,12 +706,22 @@
                             Spacing="10">
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Сумматор объема"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="99999999999"
@@ -687,15 +737,26 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Режим управления"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="По рецептам"
@@ -703,22 +764,34 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
-                        <Button Width="33" 
-                                Height="40"
-                                Classes="Settings2">
-                            <Svg Path="/Assets/Settings.svg"
-                                 Width="20" 
-                                 Height="20" />
-                        </Button>
+						<TextBox MinWidth="33"
+                                 Width="33"
+                                 Height="40"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Переполнение"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="да"
@@ -732,6 +805,7 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="5"
@@ -739,12 +813,22 @@
                             Spacing="10">
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Фактический объем"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="8964"
@@ -760,15 +844,26 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Управление треб. расходом"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="По режиму"
@@ -776,28 +871,34 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
-                        <Button Width="33"
-                                Height="40"
-                                Classes="Settings2">
-                            <Svg Path="/Assets/Settings.svg"
-                                 Width="20" 
-                                 Height="20" />
-                            <Button.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Copy" />
-                                    <MenuItem Header="Paste" />
-                                </ContextMenu>
-                            </Button.ContextMenu>
-                        </Button>
+						<TextBox MinWidth="33"
+                                 Width="33"
+                                 Height="40"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Переполнение"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+						
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="да"
@@ -811,6 +912,7 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="6"
@@ -818,12 +920,22 @@
                             Spacing="10">
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146"
-                                 Height="40"
-                                 Text="Фактическая масса"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119"
                                  Height="40"
                                  Text="8964"
@@ -839,15 +951,26 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Исправность"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  Text="В ремонте"
@@ -855,13 +978,15 @@
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
-                        <Button Width="33" 
-                                Height="40"
-                                Classes="Settings2">
-                            <Svg Path="/Assets/Settings.svg"
-                                 Width="20"
-                                 Height="20" />
-                        </Button>
+						<TextBox Height="40"
+                                 MinWidth="30"
+                                 Width="33"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                 </StackPanel>
                 <StackPanel Grid.Row="7"
@@ -871,28 +996,39 @@
                     <StackPanel Orientation="Horizontal"
                                 Spacing="-1"
                                 Margin="0 0 45 0">
-                        <TextBox Width="146" 
-                                 Height="40"
-                                 Text="Способ загрузки"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Classes="GroupPost" />
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+								Height="40"
+								HorizontalContentAlignment="Left"
+								VerticalContentAlignment="Center"
+								Classes="Continue">
+							<StackPanel Orientation="Horizontal"
+										Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
                         <TextBox Width="119" 
                                  Height="40"
                                  HorizontalContentAlignment="Center" 
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost" />
-                        <Button Width="33" 
-                                Height="40"
-                                Classes="Settings2">
-                            <Svg Path="/Assets/Settings.svg"
-                                 Width="20"
-                                 Height="20" />
-                        </Button>
+						<TextBox Height="40"
+                                 MinWidth="30"
+                                 Width="33"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost" />
+						<!-- Конец метки-->
                     </StackPanel>
                 </StackPanel>
-				<!-- ChatGPT: тебе до сюда заменять -->
             </Grid>
         </GroupBox>
 

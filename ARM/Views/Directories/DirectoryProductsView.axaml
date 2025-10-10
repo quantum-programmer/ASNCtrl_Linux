@@ -1,0 +1,127 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:ARM.ViewModels.Directories"
+             xmlns:models="clr-namespace:ARM.Models"
+             mc:Ignorable="d"
+             x:Class="ARM.Views.Directories.DirectoryProductsView"
+             x:DataType="vm:DirectoryProductsViewModel">
+
+  <UserControl.Styles>
+    <StyleInclude Source="/Styles/Styles.axaml" />
+  </UserControl.Styles>
+
+
+  <Grid ShowGridLines="False">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+    </Grid.RowDefinitions>
+
+    <!-- Заголовок -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5" Margin="10">
+      <Svg Path="/Assets/prom.svg" Classes="title" />
+      <TextBlock Text="Справочник продуктов" Classes="title" />
+    </StackPanel>
+
+    <!-- Панель кнопок -->
+    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top" Spacing="10" Margin="5" Background="#F0F0F0">
+      <Button Classes="Task" Command="{Binding AddCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Добавить" Classes="Task"/>
+          <Svg Path="/Assets/plus.svg" Height="20" Width="20"/>
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedProduct}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Удалить" Classes="Task"/>
+          <Svg Path="/Assets/minus.svg" Height="20" Width="20"/>
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding SaveCommand}" CommandParameter="{Binding SelectedProduct}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Сохранить" Classes="Task"/>
+          <Svg Path="/Assets/save.svg" Height="20" Width="20"/>
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding CancelCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Отменить" Classes="Task"/>
+          <Svg Path="/Assets/close.svg" Height="20" Width="20"/>
+        </StackPanel>
+      </Button>
+    </StackPanel>
+
+    <!-- Таблица данных -->
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Products}"
+              SelectedItem="{Binding SelectedProduct}"
+              AutoGenerateColumns="False"
+              IsReadOnly="False"
+              CanUserReorderColumns="True"
+              CanUserResizeColumns="True"
+              CanUserSortColumns="False"
+              GridLinesVisibility="All"
+              BorderThickness="1" BorderBrush="Gray"
+              Margin="10">
+
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Код" Binding="{Binding Product}"/>
+        <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+
+        <!-- Тип термокоррекции -->
+        <DataGridTemplateColumn Header="Тип термокоррекции">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="models:ProductModel">
+              <TextBlock Text="{Binding LookupFactWProdType}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate x:DataType="models:ProductModel">
+              <ComboBox ItemsSource="{Binding FactWProdTypesLookup}"
+                        SelectedItem="{Binding SelectedFactWProdType, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+        <DataGridTextColumn Header="Коэфф.темп.расш. 0" Binding ="{Binding FactW_K0}"/>
+        <DataGridTextColumn Header="Коэфф.темп.расш. 1" Binding ="{Binding FactW_K1}"/>
+        <DataGridTextColumn Header="Коэфф.темп.расш. 2" Binding ="{Binding FactW_K2}"/>
+        <DataGridTextColumn Header="Краткое наименование" Binding ="{Binding ShortName}"/>
+        <DataGridTextColumn Header="Полное наименование" Binding ="{Binding FullName}"/>
+        <DataGridTextColumn Header="Номенкулатура" Binding ="{Binding Nomenkl}"/>
+        <!-- Цвет -->
+        <DataGridTemplateColumn Header="Цвет">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="models:ProductModel">
+              <TextBlock Text="{Binding ProdColorLookUp}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate x:DataType="models:ProductModel">
+              <ComboBox ItemsSource="{Binding ProdColorsLookup}"
+                        SelectedItem="{Binding SelectedProdColor, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate>
+                    <TextBlock Text="{Binding Name}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+        <DataGridCheckBoxColumn Header="Вычит. в массе нетто" Binding="{Binding JRExclude}"/>
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

@@ -1,0 +1,105 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:ARM.ViewModels.Directories"
+             xmlns:models="clr-namespace:ARM.Models"
+             x:Class="ARM.Views.Directories.DirectoryTanksView"
+             x:DataType="vm:DirectoryTanksViewModel"
+             >
+  <UserControl.Styles>
+    <StyleInclude Source="/Styles/Styles.axaml" />
+  </UserControl.Styles>
+
+  <Grid ShowGridLines="False">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <!-- Заголовок -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5" Margin="10">
+      <Svg Path="/Assets/prom.svg" Classes="title" />
+      <TextBlock Text="Справочник резервуаров" Classes="title" />
+    </StackPanel>
+
+    <!-- Панель кнопок -->
+    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top" Spacing="10" Margin="5" Background="#F0F0F0">
+      <Button Classes="Task" Command="{Binding AddCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Добавить" Classes="Task" />
+          <Svg Path="/Assets/plus.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding DeleteCommand}" CommandParameter="{Binding SelectedTank}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Удалить" Classes="Task" />
+          <Svg Path="/Assets/minus.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding SaveCommand}" CommandParameter="{Binding SelectedTank}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Сохранить" Classes="Task" />
+          <Svg Path="/Assets/save.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding CancelCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Отменить" Classes="Task" />
+          <Svg Path="/Assets/close.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+    </StackPanel>
+
+    <!-- Таблица данных -->
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Tanks}"
+              SelectedItem="{Binding SelectedTank}"
+              AutoGenerateColumns="False"
+              IsReadOnly="False"
+              CanUserReorderColumns="True"
+              CanUserResizeColumns="True"
+              CanUserSortColumns="False"
+              GridLinesVisibility="All"
+              BorderThickness="1" BorderBrush="Gray"
+              Margin="10">
+
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Резервуар" Binding="{Binding Tank}"/>
+        <DataGridTextColumn Header="Точка" Binding="{Binding Point}"/>
+
+        <!-- Продукт: показываем LookupProduct, а редактируем с помощью ComboBox из VM.Products -->
+        <DataGridTemplateColumn Header="Продукт">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate x:DataType="models:TankModel">
+              <TextBlock Text="{Binding LookupProduct}" />
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+
+          <DataGridTemplateColumn.CellEditingTemplate>
+            <DataTemplate x:DataType="models:TankModel">
+              <ComboBox ItemsSource="{Binding ProductsLookup}"
+                        SelectedItem="{Binding SelectedProduct, Mode=TwoWay}">
+                <ComboBox.ItemTemplate>
+                  <DataTemplate x:DataType="models:ProductModel">
+                    <TextBlock Text="{Binding Name}" />
+                  </DataTemplate>
+                </ComboBox.ItemTemplate>
+              </ComboBox>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellEditingTemplate>
+        </DataGridTemplateColumn>
+
+        <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
+        <DataGridTextColumn Header="Макс. уровень" Binding="{Binding MaxH}"/>
+        <DataGridTextColumn Header="Адрес" Binding="{Binding LevelSensAddres}"/>
+      </DataGrid.Columns>
+    </DataGrid>
+    
+  </Grid>
+</UserControl>

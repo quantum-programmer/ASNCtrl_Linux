@@ -1,0 +1,37 @@
+  <Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="215"
+        xmlns:vm="using:ARM.ViewModels"
+        xmlns:vmDir="using:ARM.ViewModels.Directories"
+        x:Class="ARM.DirectoryMainView"
+        x:DataType="vm:DirectoryMainViewModel"
+        xmlns:views="using:ARM.Views.Directories"
+        Height="600" Width="1600"
+        WindowStartupLocation="CenterOwner"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="Default"
+        ExtendClientAreaTitleBarHeightHint="-1"
+        SystemDecorations="Full"
+        Title="Справочник"
+        Icon="avares://ARM/Assets/avalonia-logo.ico"  >
+
+    <ContentControl Content="{Binding CurrentViewModel}">
+      <ContentControl.DataTemplates>
+        <DataTemplate DataType="vmDir:DirectoryPostsViewModel">
+          <views:DirectoryPostsView />
+        </DataTemplate>
+        <DataTemplate DataType="vmDir:DirectoryProductsViewModel">
+          <views:DirectoryProductsView />
+        </DataTemplate>
+        <DataTemplate DataType="vmDir:DirectoryTanksViewModel">
+          <views:DirectoryTanksView />
+        </DataTemplate>
+        <DataTemplate DataType="vmDir:DirectoryTubesViewModel">
+          <views:DirectoryTubesView />
+        </DataTemplate>
+      </ContentControl.DataTemplates>
+    </ContentControl>
+
+  </Window>

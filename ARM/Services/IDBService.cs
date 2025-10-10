@@ -7,14 +7,21 @@ using System.Text;
 using System.Threading.Tasks;
 namespace ARM.Services;
 
-public interface IDBService
-{
-    public bool CheckConnection();
-    public string GetConnectionString();
-    public Task<int?> Login(string login, string passord);       
-    public Task<List<ARMReport>> GetAllReportsAsync();        
-    //Task<List<Dictionary<string, object>>> GetUserAccountsAsync();
-    //Task<string> PostgreSqlVersionAsync();
-    //Task<bool> NewItemAsync(string name, bool usertyped, int datatype, int owners);
-    Task UpdatePostAsync(PostModel post);            
+    public interface IDBService
+    {
+        public bool CheckConnection();
+        public string GetConnectionString();
+        public Task<int?> Login(string login, string passord);
+    // Task<List<Dictionary<string, object>>> GetUserAccountsAsync();
+    //  Task<string> PostgreSqlVersionAsync();
+    // Task<bool> NewItemAsync(string name, bool usertyped, int datatype, int owners);
+
+    //   Task<List<Dictionary<string, object>>> GetItemsAsync(string tableName, string[] columns);
+    // Products
+    public Task<List<ARMReport>> GetAllReportsAsync();
+    Task<List<ProductModel>> GetProductsAsync();
+    //Task InsertProductAsync(ProductModel product);
+    Task UpdateProductAsync(ProductModel product);
+    Task DeleteProductAsync(int productId);
+
 }

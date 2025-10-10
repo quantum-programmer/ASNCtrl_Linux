@@ -10,11 +10,17 @@ using ARM.Models;
 using ARM.Services;
 using System.Linq;
 using System;
-using Serilog;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using MsBox.Avalonia;
 using System.Collections.Generic;
+using Serilog;
 using System.Diagnostics;
+using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using Avalonia.LogicalTree;
+using Avalonia.VisualTree;
 
 namespace ARM.ViewModels;
 
@@ -22,33 +28,32 @@ public partial class MainViewModel : ViewModelBase
 {
     [ObservableProperty]
     public ObservableCollection<ARMReport> reports = new();
-
     public ICommand OpenSettingsViewCommand => new RelayCommand(OpenSettings);
     public ICommand OpenInfoViewCommand => new RelayCommand(OpenInfo);
-    public ICommand OpenSpravocnikCommand => new RelayCommand(OpenSpravocnik);
-    // public ICommand OpenReportCommand => new RelayCommand(OpenReport);
-    //public ICommand OpenReportsCommand => new RelayCommand(OpenReports);
-
-    //public IAsyncRelayCommand<ARMReport> OpenReportCommand => new AsyncRelayCommand<ARMReport>(OpenReport);
-
+    public ICommand OpenDirectoryCommand => new RelayCommand<object>(OpenDirectory);
     private PostModel? _selectedPost;
 
-    private readonly IDBService _dbService;
+    //private readonly IDBService _dbService;
+    private readonly PostgresDBService _dbService;
 
     public ObservableCollection<PostGroupModel> AutoCisternGroups { get; } = new();
     public ObservableCollection<PostGroupModel> DispenserGroups { get; } = new();
-    
-    public MainViewModel(IDBService dbService)
+
+
+    public MainViewModel(PostgresDBService dbService)
     {
         _dbService = dbService;
         LoadPostsAsync();
         LoadListReports();
     }
 
+
+
     //генерация постов + сайд
     private async void LoadPostsAsync()
     {
-        var postList = await (_dbService as PostgresDBService)?.GetPostsAsync();
+        var post123 = await _dbService.LoadPostsAsync();//удалить, оставил для коннекта до создания авторизации пользователя 
+        var postList = await _dbService.GetPostsAsync();
         if (postList != null)
         {
             AutoCisternGroups.Clear();
@@ -59,7 +64,7 @@ public partial class MainViewModel : ViewModelBase
                 .GroupBy(p => p.Side)
                 .Select(g => new PostGroupModel
                 {
-                    Side = g.Key,
+                    Side = (int)g.Key,
                     Posts = new ObservableCollection<PostModel>(
                         g.Select(post =>
                         {
@@ -73,7 +78,7 @@ public partial class MainViewModel : ViewModelBase
                 .GroupBy(p => p.Side)
                 .Select(g => new PostGroupModel
                 {
-                    Side = g.Key,
+                    Side = (int)g.Key,
                     Posts = new ObservableCollection<PostModel>(
                         g.Select(post =>
                         {
@@ -109,7 +114,7 @@ public partial class MainViewModel : ViewModelBase
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Ошибка при загрузке отчетов из базы данных"); 
+            Log.Error(ex, "Ошибка при загрузке отчетов из базы данных");
         }
     }
 
@@ -121,11 +126,11 @@ public partial class MainViewModel : ViewModelBase
     public IRelayCommand<PostModel> SelectPostCommand => new RelayCommand<PostModel>(post => SelectedPost = post);
 
 
-    private void OpenSettings()
+    private async void OpenSettings()
     {
         var window = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
         var modal = new SettingsView { DataContext = new SettingsViewModel() };
-        modal.ShowDialog(window);
+        await modal.ShowDialog(window);
     }
     
     private void OpenInfo()
@@ -135,11 +140,18 @@ public partial class MainViewModel : ViewModelBase
         modal.ShowDialog(window);
     }
 
-    private void OpenSpravocnik()
-    { 
-        var window = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
-        var modal = new SpravocnikPostovView { DataContext = new SpravocnikPostovViewModel(_dbService) };
-        modal.ShowDialog(window);
+    private async void OpenDirectory(object parameter)
+    {
+        if (parameter is string directoryName)
+        {
+            var window = (Application.Current.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+
+            var modal = new DirectoryMainView(_dbService, directoryName);
+
+            await modal.ShowDialog(window);
+
+            LoadPostsAsync(); // Обновляем данные после закрытия окна
+        }
     }
 
     private async Task OpenReport(ARMReport? report)
@@ -185,8 +197,128 @@ public partial class MainViewModel : ViewModelBase
         }
     }
 
+    [RelayCommand]
+    private void HiddenButtonClick(Button? button)
+    {
+        if (button?.ContextMenu is not { } menu)
+        {
+            return;
+        }
 
+        button.Classes.Add("menu-open");
+        menu.Tag = button;
 
+        void OnMenuClosed(object? _, RoutedEventArgs args)
+        {
+            menu.Closed -= OnMenuClosed;
+            button.Classes.Remove("menu-open");
+        }
+
+        menu.Closed += OnMenuClosed;
+        menu.Open(button);
+    }
+
+    [RelayCommand]
+    private void HiddenMenuItemClick(MenuItem? menuItem)
+    {
+        if (!TryResolveMenuContext(menuItem, out var contextMenu, out var button) || contextMenu is null || button is null)
+        {
+            return;
+        }
+
+        contextMenu.Close();
+
+        button.Classes.Add("shown");
+        button.Classes.Remove("menu-open");
+        button.ClearValue(Button.OpacityProperty);
+
+        UpdateSiblingTextBoxes(button, show: true);
+    }
+
+    [RelayCommand]
+    private void HiddenMenuEmptyClick(MenuItem? menuItem)
+    {
+        if (!TryResolveMenuContext(menuItem, out var contextMenu, out var button) || contextMenu is null || button is null)
+        {
+            return;
+        }
+
+        contextMenu.Close();
+
+        button.Classes.Remove("shown");
+        button.Classes.Remove("menu-open");
+        button.ClearValue(Button.OpacityProperty);
+
+        UpdateSiblingTextBoxes(button, show: false);
+    }
+
+    public void HiddenButtonPointerEntered(PointerEventArgs e)
+    {
+        if (e.Source is Button button && button.Classes.Contains("hidden-button") && !button.Classes.Contains("shown"))
+        {
+            button.ClearValue(Button.OpacityProperty);
+        }
+    }
+
+    private static bool TryResolveMenuContext(MenuItem? menuItem, out ContextMenu? contextMenu, out Button? button)
+    {
+        contextMenu = null;
+        button = null;
+
+        if (menuItem is null)
+        {
+            return false;
+        }
+
+        contextMenu = menuItem.GetLogicalAncestors().OfType<ContextMenu>().FirstOrDefault()
+                       ?? menuItem.GetVisualAncestors().OfType<ContextMenu>().FirstOrDefault();
+
+        if ((contextMenu?.Tag ?? contextMenu?.PlacementTarget) is Button resolvedButton)
+        {
+            button = resolvedButton;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void UpdateSiblingTextBoxes(Button button, bool show)
+    {
+        var parent = button.GetLogicalParent();
+        if (parent is null)
+        {
+            return;
+        }
+
+        var updatedCount = 0;
+        foreach (var sibling in parent.GetLogicalChildren()
+                                      .SkipWhile(child => !ReferenceEquals(child, button))
+                                      .Skip(1))
+        {
+            if (sibling is not TextBox siblingTextBox)
+            {
+                continue;
+            }
+
+            if (show)
+            {
+                siblingTextBox.Classes.Add("shown");
+                siblingTextBox.IsHitTestVisible = true;
+                siblingTextBox.Opacity = 1;
+            }
+            else
+            {
+                siblingTextBox.Classes.Remove("shown");
+                siblingTextBox.IsHitTestVisible = false;
+                siblingTextBox.Opacity = 0;
+            }
+
+            if (++updatedCount >= 2)
+            {
+                break;
+            }
+        }
+    }
 
 }
 

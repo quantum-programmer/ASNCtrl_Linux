@@ -14,16 +14,22 @@
              Background="#DFDFDF">
 
     <UserControl.Styles>
-        <StyleInclude Source="/Styles/Styles.axaml" />
+		<StyleInclude Source="/Styles/Styles.axaml" />
 		<Style Selector="Button.hidden-button">
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="Opacity" Value="0" />
 			<Setter Property="ContextMenu">
 				<ContextMenu>
-					<MenuItem Header="&lt;пусто&gt;" Click="HiddenMenuEmpty_Click" />
+					<MenuItem Header="&lt;пусто&gt;"
+		                      Command="{Binding HiddenMenuEmptyClickCommand}"
+		                      CommandParameter="{Binding RelativeSource={RelativeSource Self}}" />
 					<MenuItem Header="Меню">
-						<MenuItem Header="Пункт 1" Click="HiddenMenuItem_Click" />
-						<MenuItem Header="Пункт 2" Click="HiddenMenuItem_Click" />
+						<MenuItem Header="Пункт 1"
+                                  Command="{Binding HiddenMenuItemClickCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}" />
+						<MenuItem Header="Пункт 2"
+                                  Command="{Binding HiddenMenuItemClickCommand}"
+                                  CommandParameter="{Binding RelativeSource={RelativeSource Self}}" />
 					</MenuItem>
 				</ContextMenu>
 			</Setter>
@@ -37,15 +43,15 @@
 		<Style Selector="Button.hidden-button.shown">
 			<Setter Property="Opacity" Value="1" />
 		</Style>
-		<Style Selector="TextBox.hidden-text">			
+		<Style Selector="TextBox.hidden-text">
 			<Setter Property="Opacity" Value="0" />
-			<Setter Property="IsHitTestVisible" Value="False" />			
+			<Setter Property="IsHitTestVisible" Value="False" />
 		</Style>
-		<Style Selector="TextBox.hidden-text.shown">			
+		<Style Selector="TextBox.hidden-text.shown">
 			<Setter Property="Opacity" Value="1" />
-			<Setter Property="IsHitTestVisible" Value="True" />			
+			<Setter Property="IsHitTestVisible" Value="True" />
 		</Style>
-	</UserControl.Styles>
+    </UserControl.Styles>
 
     <UserControl.Resources>
         <conv:EarthToVisibilityConverter x:Key="EarthToVisible" />
@@ -97,21 +103,20 @@
                         Spacing="5"
                         Margin="20">
               <Menu>
-                <MenuItem Header="1">
-                  <MenuItem Header="2"/>
-                  <MenuItem Header="3"/>
-                </MenuItem>              
+                <MenuItem>
+                  <MenuItem.Header>
+                    <Svg Path="/Assets/g1711.svg" Width="17" Height="20" />
+                  </MenuItem.Header>
+                  <MenuItem Header="Справочник нефтепродуктов" Command="{Binding OpenDirectoryCommand}" CommandParameter="Products" />
+                  <MenuItem Header="Справочник резервуаров" Command="{Binding OpenDirectoryCommand}" CommandParameter="Tanks" />
+                  <MenuItem Header="Справочник постов" Command="{Binding OpenDirectoryCommand}" CommandParameter="Posts" />
+                  <MenuItem Header="Справочник трубопроводов" Command="{Binding OpenDirectoryCommand}" CommandParameter="Tubes" />
+                  
+                </MenuItem>
               </Menu>
-                <Button Background="Transparent"
-                        Classes="Panel"
-                        Command="{Binding OpenSpravocnikCommand}">
-                    <Svg Path="/Assets/g1711.svg"
-                         Width="17" 
-                         Height="20" />
-                </Button>
-
 				<Menu Background="Transparent" Classes="Panel">
-					<MenuItem Header="Отчеты">
+					<MenuItem Header="Отчеты"
+                              ItemsSource="{Binding Reports}">
 						<MenuItem.HeaderTemplate>
 							<DataTemplate>
 								<StackPanel Orientation="Horizontal">
@@ -119,14 +124,12 @@
 								</StackPanel>
 							</DataTemplate>
 						</MenuItem.HeaderTemplate>
-						<ItemsControl ItemsSource="{Binding Reports}">
-							<ItemsControl.ItemTemplate>
-								<DataTemplate x:DataType="models:ARMReport">
-									<MenuItem Header="{Binding Name}"
-											  Command="{Binding OpenCommand}"/>
-								</DataTemplate>
-							</ItemsControl.ItemTemplate>
-						</ItemsControl>
+						<MenuItem.ItemTemplate>
+							<DataTemplate x:DataType="models:ARMReport">
+								<MenuItem Header="{Binding Name}"
+                                          Click="ReportMenuItem_OnClick"/>
+							</DataTemplate>
+						</MenuItem.ItemTemplate>
 					</MenuItem>
 				</Menu>
 
@@ -235,8 +238,9 @@
                                                                 Tag="{Binding Earth}" Height="150">
                                                             <StackPanel>
                                                                 <!-- Развёрнутый пост -->
-                                                              <Button Command="{Binding SelectPostCommand}" BorderThickness="0">
+                                                              
                                                                 <StackPanel IsVisible="{Binding Earth, Converter={StaticResource EarthToVisible}}">
+                                                                  <Button Command="{Binding SelectPostCommand}" BorderThickness="0">
                                                                     <DockPanel LastChildFill="True"
                                                                                Height="140" 
                                                                                Width="227">
@@ -359,13 +363,15 @@
                                                                                 Margin="0,0,6,0" />
                                                                         </Panel>
                                                                     </DockPanel>
+                                                                  </Button>
                                                                 </StackPanel>
-                                                              </Button>
+                                                          
 
                                                                 <!-- Свернутый пост -->
                                                                 <StackPanel Orientation="Horizontal"
                                                                             IsVisible="{Binding Earth, Converter={StaticResource EarthToVisible}, ConverterParameter=invert}">
-                                                                    <StackPanel>
+                                                                  <Button Command="{Binding SelectPostCommand}" BorderThickness="0">  
+                                                                  <StackPanel>
                                                                         <StackPanel Orientation="Horizontal">
                                                                             <TextBox Text="{Binding PostNumber}"
                                                                                      MinHeight="35" 
@@ -376,23 +382,11 @@
                                                                                      BorderThickness="0 0 2 2"
                                                                                      MinHeight="35" 
                                                                                      Width="179"
-                                                                                     Background="#DDDDDD"
-                                                                                     Classes="HidePost" />
-                                                                        </StackPanel>
-                                                                        <StackPanel Orientation="Horizontal">
-                                                                            <TextBox Text="{Binding PostNumber}"
-                                                                                     MinHeight="35" 
-                                                                                     MinWidth="46"
-                                                                                     BorderThickness="0 0 2 2"
-                                                                                     Classes="HidePost" />
-                                                                            <TextBox Text="{Binding FuelType}"
-                                                                                     MinHeight="35" 
-                                                                                     Width="179"
-                                                                                     BorderThickness="0 0 2 2"
                                                                                      Background="#DDDDDD"
                                                                                      Classes="HidePost" />
                                                                         </StackPanel>
                                                                     </StackPanel>
+                                                                    </Button>
                                                                 </StackPanel>
                                                             </StackPanel>
                                                         </Border>
@@ -563,8 +557,8 @@
                             </StackPanel>
                         </Button>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal">
+						<StackPanel Orientation="Horizontal"
                                     Spacing="-1">
 							<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 							<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -573,36 +567,36 @@
 											HorizontalContentAlignment="Left"
 											VerticalContentAlignment="Center"
 											Classes="Continue hidden-button"
-											Click="HiddenButton_Click">
+											Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 								<StackPanel Orientation="Horizontal"
 														Spacing="30">
 									<TextBlock Text="" />
 								</StackPanel>
 							</Button>
 							<!-- Конец метки-->
-                            
+
 							<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 							<!-- делать видимыми -->
-                            <TextBox Width="119" 
+							<TextBox Width="119"
                                      Height="40"
                                      Text="0,5"
-                                     HorizontalContentAlignment="Center" 
+                                     HorizontalContentAlignment="Center"
                                      VerticalContentAlignment="Center"
                                      Background="#FFFFFF"
                                      Classes="GroupPost hidden-text"/>
-                            <TextBox MinWidth="33" 
-                                     Width="33" 
+							<TextBox MinWidth="33"
+                                     Width="33"
                                      Height="40"
                                      Text="кг/л³"
                                      FontSize="11"
-                                     HorizontalContentAlignment="Center" 
+                                     HorizontalContentAlignment="Center"
                                      VerticalContentAlignment="Center"
                                      Background="#FFFFFF"
                                      Classes="GroupPost hidden-text" />
 							<!-- конец метки -->
-                        </StackPanel>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+						</StackPanel>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -611,7 +605,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -621,49 +615,49 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="рабочее"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- конец метки -->
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Row="3"
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Row="3"
                             Orientation="Horizontal"
                             Spacing="10">
-                    <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal"
                                 Spacing="5">
-                        <Button Width="144"
+						<Button Width="144"
                                 Height="40"
                                 Classes="Pause">
-                            <StackPanel Orientation="Horizontal"
+							<StackPanel Orientation="Horizontal"
                                         Spacing="65">
-                                <TextBlock Text="Пауза" />
-                                <Svg Path="/Assets/Group960.svg"
+								<TextBlock Text="Пауза" />
+								<Svg Path="/Assets/Group960.svg"
                                      Height="16" />
-                            </StackPanel>
-                        </Button>
-                        <Button Width="147"
+							</StackPanel>
+						</Button>
+						<Button Width="147"
                                 Height="40"
                                 Classes="Stop">
-                            <StackPanel Orientation="Horizontal"
+							<StackPanel Orientation="Horizontal"
                                         Spacing="40">
-                                <TextBlock Text="Останов." />
-                                <Svg Path="/Assets/Vector2.svg"
+								<TextBlock Text="Останов." />
+								<Svg Path="/Assets/Vector2.svg"
                                      Height="16" />
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+							</StackPanel>
+						</Button>
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -672,7 +666,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -682,25 +676,25 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="0,7"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
                                  Text="кг/л³"
                                  FontSize="11"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
 					</StackPanel>
-                    <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -709,7 +703,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -719,26 +713,26 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="не установлено"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Row="4"
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Row="4"
                             Orientation="Horizontal"
                             Spacing="10">
-                    <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -747,7 +741,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -757,24 +751,24 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="99999999999"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
                                  Text="л"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -783,7 +777,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -793,10 +787,10 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="По рецептам"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
@@ -809,8 +803,8 @@
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -819,7 +813,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -829,26 +823,26 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="да"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Row="5"
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Row="5"
                             Orientation="Horizontal"
                             Spacing="10">
-                    <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -857,7 +851,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -867,24 +861,24 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="8964"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
                                  Text="л"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -893,7 +887,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -903,10 +897,10 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="По режиму"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
@@ -919,8 +913,8 @@
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -929,36 +923,36 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
 							</StackPanel>
 						</Button>
 						<!-- Конец метки-->
-						
+
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
                                  Text="да"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Classes="GroupPost hidden-text" />
-                        <TextBox MinWidth="33" 
-                                 Width="33" 
+						<TextBox MinWidth="33"
+                                 Width="33"
                                  Height="40"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Row="6"
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Row="6"
                             Orientation="Horizontal"
                             Spacing="10">
-                    <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
 						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
@@ -967,7 +961,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -977,46 +971,10 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119"
+						<TextBox Width="119"
                                  Height="40"
                                  Text="8964"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Background="#FFFFFF"
-                                 Classes="GroupPost hidden-text" />
-                        <TextBox Height="40" 
-                                 MinWidth="30" 
-                                 Width="33"
-                                 Text="л"
-                                 HorizontalContentAlignment="Center" 
-                                 VerticalContentAlignment="Center"
-                                 Background="#FFFFFF"
-                                 Classes="GroupPost hidden-text" />
-						<!-- Конец метки-->
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal"
-                                Spacing="-1">
-						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
-						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
-						<Button Width="147"
-										 Height="40"
-										 HorizontalContentAlignment="Left"
-										 VerticalContentAlignment="Center"
-										 Classes="Continue hidden-button"
-										 Click="HiddenButton_Click">
-							<StackPanel Orientation="Horizontal"
-													Spacing="30">
-								<TextBlock Text="" />
-							</StackPanel>
-						</Button>
-						<!-- Конец метки-->
-
-						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
-						<!-- делать видимыми -->
-                        <TextBox Width="119" 
-                                 Height="40"
-                                 Text="В ремонте"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
@@ -1029,13 +987,49 @@
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                </StackPanel>
-                <StackPanel Grid.Row="7"
+					</StackPanel>
+					<StackPanel Orientation="Horizontal"
+                                Spacing="-1">
+						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
+						<!-- А при нажатии на эту кнопку, чтобы всплывало PopupMenu (можно пока просто для примера 2-уровневое PopUpMenu) -->
+						<Button Width="147"
+										 Height="40"
+										 HorizontalContentAlignment="Left"
+										 VerticalContentAlignment="Center"
+										 Classes="Continue hidden-button"
+										 Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
+							<StackPanel Orientation="Horizontal"
+													Spacing="30">
+								<TextBlock Text="" />
+							</StackPanel>
+						</Button>
+						<!-- Конец метки-->
+
+						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
+						<!-- делать видимыми -->
+						<TextBox Width="119"
+                                 Height="40"
+                                 Text="В ремонте"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost hidden-text" />
+						<TextBox Height="40"
+                                 MinWidth="30"
+                                 Width="33"
+                                 Text="л"
+                                 HorizontalContentAlignment="Center"
+                                 VerticalContentAlignment="Center"
+                                 Background="#FFFFFF"
+                                 Classes="GroupPost hidden-text" />
+						<!-- Конец метки-->
+					</StackPanel>
+				</StackPanel>
+				<StackPanel Grid.Row="7"
                             Orientation="Horizontal"
                             Spacing="10"
                             HorizontalAlignment="Center">
-                    <StackPanel Orientation="Horizontal"
+					<StackPanel Orientation="Horizontal"
                                 Spacing="-1"
                                 Margin="0 0 45 0">
 						<!-- Метка: сделать кнопку невидимой по-умолчанию, а при наведении чтобы показывалась -->
@@ -1045,7 +1039,7 @@
 										HorizontalContentAlignment="Left"
 										VerticalContentAlignment="Center"
 										Classes="Continue hidden-button"
-										Click="HiddenButton_Click">
+										Command="{Binding HiddenButtonClickCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}">
 							<StackPanel Orientation="Horizontal"
 													Spacing="30">
 								<TextBlock Text="" />
@@ -1055,9 +1049,9 @@
 
 						<!-- Метка: оба TextBox сделать изначально невидимыми, но при выборе любого пункта меню в PopupMenu из проишлой метки-->
 						<!-- делать видимыми -->
-                        <TextBox Width="119" 
+						<TextBox Width="119"
                                  Height="40"
-                                 HorizontalContentAlignment="Center" 
+                                 HorizontalContentAlignment="Center"
                                  VerticalContentAlignment="Center"
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
@@ -1070,8 +1064,8 @@
                                  Background="#FFFFFF"
                                  Classes="GroupPost hidden-text" />
 						<!-- Конец метки-->
-                    </StackPanel>
-                </StackPanel>
+					</StackPanel>
+				</StackPanel>
             </Grid>
         </GroupBox>
 

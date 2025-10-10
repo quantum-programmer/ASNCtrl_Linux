@@ -1,0 +1,92 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ARM.Views.Directories.DirectoryTubesView"
+               xmlns:vm="clr-namespace:ARM.ViewModels.Directories"
+               xmlns:models="clr-namespace:ARM.Models"
+               x:DataType="vm:DirectoryTubesViewModel">
+
+  <UserControl.Styles>
+    <StyleInclude Source="/Styles/Styles.axaml" />
+  </UserControl.Styles>
+
+
+
+
+  <Grid ShowGridLines="False">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition />
+    </Grid.RowDefinitions>
+
+    <!-- Заголовок -->
+    <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="5" Margin="10">
+      <Svg Path="/Assets/prom.svg" Classes="title" />
+      <TextBlock Text="Справочник трубопроводов" Classes="title" />
+    </StackPanel>
+
+    <!-- Панель кнопок -->
+    <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top" Spacing="10" Margin="5" Background="#F0F0F0">
+      <Button Classes="Task" Command="{Binding AddCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Добавить" Classes="Task" />
+          <Svg Path="/Assets/plus.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding DeleteCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Удалить" Classes="Task" />
+          <Svg Path="/Assets/minus.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding SaveCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Сохранить" Classes="Task" />
+          <Svg Path="/Assets/save.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+
+      <Button Classes="Task" Command="{Binding CancelCommand}">
+        <StackPanel Orientation="Horizontal" Spacing="3" HorizontalAlignment="Center">
+          <TextBlock Text="Отменить" Classes="Task" />
+          <Svg Path="/Assets/close.svg" Height="20" Width="20" />
+        </StackPanel>
+      </Button>
+    </StackPanel>
+
+    <!-- Таблица данных -->
+    <DataGrid Grid.Row="2"
+              ItemsSource="{Binding Tubes}"
+              SelectedItem="{Binding SelectedTube, Mode=TwoWay}"
+              AutoGenerateColumns="False"
+              IsReadOnly="False"
+              CanUserReorderColumns="True"
+              CanUserResizeColumns="True"
+              CanUserSortColumns="False"
+              GridLinesVisibility="All"
+              BorderThickness="1" BorderBrush="Gray"
+              Margin="10">
+      <DataGrid.Styles>
+        <!-- Для всех текстов внутри ячеек -->
+        <Style Selector="DataGridCell TextBlock">
+          <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <!-- Для всех ComboBox внутри ячеек -->
+        <Style Selector="DataGridCell ComboBox">
+          <Setter Property="FontSize" Value="14"/>
+        </Style>
+      </DataGrid.Styles>
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Трубопровод" Binding="{Binding Tube}" />
+        <DataGridTextColumn Header="Точка резервуара" Binding="{Binding Point1}" />
+        <DataGridTextColumn Header="Точка поста" Binding="{Binding Point2}" />
+      </DataGrid.Columns>
+    </DataGrid>
+  </Grid>
+</UserControl>

@@ -57,11 +57,27 @@
     <PackageReference Include="GroupBox.Avalonia" Version="11.0.0" />
     <PackageReference Include="Npgsql" Version="9.0.3" />
     <PackageReference Include="Serilog" Version="4.2.0" />
+    <PackageReference Include="System.ObjectModel" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <AvaloniaResource Update="Styles\Styles2.axaml">
       <SubType>Designer</SubType>
     </AvaloniaResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Views\Directories\DirectoryLockGrpsView.axaml.cs">
+      <DependentUpon>DirectoryLockGrpsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Directories\DirectoryPostsView.axaml.cs">
+      <DependentUpon>DirectoryPostsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\Directories\DirectoryProductsView.axaml.cs">
+      <DependentUpon>DirectoryProductsView.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\DirectoryMainView.axaml.cs">
+      <DependentUpon>DirectoryMainView.axaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 </Project>

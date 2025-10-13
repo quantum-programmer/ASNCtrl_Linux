@@ -53,7 +53,15 @@ public partial class MainViewModel : ViewModelBase
     private async void LoadPostsAsync()
     {
         var post123 = await _dbService.LoadPostsAsync();//удалить, оставил для коннекта до создания авторизации пользователя 
-        var postList = await _dbService.GetPostsAsync();
+        List<PostModel> postList = null;
+        try
+        {
+            postList = await _dbService.GetPostsAsync();
+        }
+        catch (Exception ex)
+        {
+            await App.DialogService.ShowErrorAsync($"Ошибка при загрузке постов: {ex.Message}");
+        }
         if (postList != null)
         {
             AutoCisternGroups.Clear();

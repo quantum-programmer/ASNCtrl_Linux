@@ -33,10 +33,11 @@ namespace ARM
 #if VERSION_2B
             "C27BD1A545D27B2FAE0A9B81E2AB7CD7";
 #elif VERSION_2C
-            "99E992D40A2E7FEA5B4C7F3BBE815AC9";   
+            "99E992D40A2E7FEA5B4C7F3BBE815AC9";
 #else
             "DEFAULT_HASH";
 #endif
+        public static IDialogService DialogService { get; private set; }
 
         private static string GetOpcLoggerPath()
         {
@@ -73,6 +74,8 @@ namespace ARM
 
                 // Удаляем встроенный Avalonia data validator
                 BindingPlugins.DataValidators.RemoveAt(0);
+
+                DialogService = new DialogService();
 
                 var mainWindow = new MainWindow
                 {

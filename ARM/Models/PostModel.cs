@@ -10,7 +10,7 @@ namespace ARM.Models
 {
     public class PostModel
     {
-        public int PostNumber { get; set; }
+        //public int Post { get; set; }
         public int id { get; set; }
         public string VehicleNumber { get; set; }
         public string DriverName { get; set; }
@@ -18,7 +18,7 @@ namespace ARM.Models
         public int Volume { get; set; }
         public int Dose { get; set; }
         //public int Side { get; set; }
-        public int Earth { get; set; }
+        public int Earthed { get; set; }
        // public int MachineType { get; set; }
 
         public string VolumeInfo => $"{Volume}л / {Dose}л";

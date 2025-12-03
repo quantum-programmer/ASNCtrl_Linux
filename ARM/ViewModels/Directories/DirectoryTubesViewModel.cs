@@ -42,10 +42,10 @@ namespace ARM.ViewModels.Directories
             DeleteCommand = new RelayCommand(async () => await OnDeleteAsync(), () => SelectedTube != null);
             CancelCommand = new RelayCommand(OnCancel);
 
-            LoadDataAsync();
+            _ = LoadDataAsync();
         }
 
-        private async void LoadDataAsync()
+        private async Task LoadDataAsync()
         {
             var tubes = await _dbService.GetTubesAsync();
             Tubes.Clear();
@@ -65,23 +65,31 @@ namespace ARM.ViewModels.Directories
 
         private async Task OnSaveAsync()
         {
-            if (SelectedTube == null) return;
+            if (SelectedTube == null)
+                return;
 
-            var isNew = ReferenceEquals(SelectedTube, _addedItem) || SelectedTube.Tube == 0;
+            bool isNew = ReferenceEquals(SelectedTube, _addedItem);
 
             if (isNew)
             {
+                // Вставка новой строки
                 var newId = await _dbService.InsertTubeAsync(SelectedTube);
+
+                // Если база возвращает новый ID — запишем в модель
                 if (newId > 0)
                     SelectedTube.Tube = (short)newId;
+
                 _addedItem = null;
             }
             else
             {
+                // Обновление существующей строки
                 await _dbService.UpdateTubeAsync(SelectedTube);
             }
-            LoadDataAsync();
+
+            await LoadDataAsync(); 
         }
+
 
         private async Task OnDeleteAsync()
         {

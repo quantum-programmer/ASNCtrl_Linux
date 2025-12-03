@@ -1,17 +1,21 @@
-﻿using Npgsql;
+﻿using ARM.Models;
+using Avalonia;
+using HarfBuzzSharp;
+using Microsoft.Extensions.Hosting;
+using Npgsql;
+using Serilog;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Runtime.InteropServices;
+using System.Data;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
 using static System.Net.Mime.MediaTypeNames;
-using Microsoft.Extensions.Hosting;
-using ARM.Models;
-using Avalonia;
-using HarfBuzzSharp;
 
 
 namespace ARM.Services;
@@ -204,25 +208,25 @@ public class PostgresDBService : IDBService
             dataSource = NpgsqlDataSource.Create(builder.ConnectionString);
 
             await using var connection = await dataSource.OpenConnectionAsync();
-            using var command = new NpgsqlCommand(@"SELECT ""PostNumber"", ""VehicleNumber"", ""DriverName"", ""FuelType"", ""Volume"", ""Dose"", ""Side"", ""Earth"", ""MachineType"", ""id"" FROM public.""Posts"";", connection);
+            //using var command = new NpgsqlCommand(@"SELECT ""PostNumber"", ""VehicleNumber"", ""DriverName"", ""FuelType"", ""Volume"", ""Dose"", ""Side"", ""Earth"", ""MachineType"", ""id"" FROM public.""Posts"";", connection);
 
-            var reader = await command.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                posts.Add(new PostModel
-                {
-                    PostNumber = reader.GetInt32(0),
-                    VehicleNumber = reader.GetString(1),
-                    DriverName = reader.GetString(2),
-                    FuelType = reader.GetString(3),
-                    Volume = reader.GetInt32(4),
-                    Dose = reader.GetInt32(5),
-                    Side = reader.GetInt16(6),
-                    Earth = reader.GetInt32(7),
-                    MachineType = reader.GetInt16(8),
-                    id = reader.GetInt32(9),
-                });
-            }
+           // var reader = await command.ExecuteReaderAsync();
+            //while (await reader.ReadAsync())
+            //{
+            //    posts.Add(new PostModel
+            //    {
+            //        PostNumber = reader.GetInt32(0),
+            //        VehicleNumber = reader.GetString(1),
+            //        DriverName = reader.GetString(2),
+            //        FuelType = reader.GetString(3),
+            //        Volume = reader.GetInt32(4),
+            //        Dose = reader.GetInt32(5),
+            //        Side = reader.GetInt16(6),
+            //        Earth = reader.GetInt32(7),
+            //        MachineType = reader.GetInt16(8),
+            //        id = reader.GetInt32(9),
+            //    });
+            //}
         }
         catch (Exception ex)
         {
@@ -409,51 +413,52 @@ ORDER BY P.""Product"";";
         await using var conn = await dataSource.OpenConnectionAsync();
 
         var sql = @"
-SELECT
-  P.""Place"",
-  P.""Post"",
-  P.""Point"",
-  P.""Side"",
-  P.""FactVMethod"",
-  P.""FactWMethod"",
-  P.""Direction"",
-  P.""MachineType"",
-  P.""UserTypedTemperature"",
-  P.""UpDownFill"",
-  P.""StartReversed"",
-  P.""CtrlType"",
-  P.""KMXFill"",
-  P.""isEPost"",
-  (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.Density' LIMIT 1) AS ""Density"",
-  (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.Temperature' LIMIT 1) AS ""Temperature"",
-  (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.LabDensity' LIMIT 1) AS ""LabDensity"",
-  (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.LabTemperature' LIMIT 1) AS ""LabTemperature"",
-  (SELECT CASE WHEN COUNT(DISTINCT T.""Tank"") = 1 THEN MIN(T.""Tank"") ELSE NULL END
-   FROM ""DTanks"" T
-   INNER JOIN ""DTubes"" U ON T.""Point"" = U.""Point1""
-   WHERE U.""Point2"" = P.""Point"") AS ""Tank"",
-  (SELECT H.""Number""
-   FROM ""DObjs"" H
-   INNER JOIN ""Items"" IP
-     ON IP.""Name"" = 'HydroMeter' || H.""Number""::text || '.Point'
-    AND IP.""Item"" = P.""Point"" -- заменил ItemTimeToVal, см. выше
-   WHERE H.""ClassName"" = 'HydroMeter'
-   LIMIT 1) AS ""HydroMeter"",
-  (SELECT X.""ValN""
-   FROM ""DObjs"" O
-   LEFT JOIN ""Items"" IPt
-     ON IPt.""Name"" = 'Post' || O.""Number""::text || '.PointOut'
-   LEFT JOIN ""DObjsEx"" X
-     ON X.""Obj"" = O.""Obj"" AND X.""Param"" = 'MType'
-   WHERE O.""ClassName"" = 'Mixer' AND O.""Number"" = P.""Post""
-   LIMIT 1) AS ""MType"",
-  P.""LastRecordBUIJournal"",
-  P.""TotalVLast""
-FROM ""DPosts"" P
-ORDER BY P.""Place"", P.""Post"";";
+                    SELECT
+                    P.""Place"",
+                    P.""Post"",
+                    P.""Point"",
+                    P.""Side"",
+                    P.""FactVMethod"",
+                    P.""FactWMethod"",
+                    P.""Direction"",
+                    P.""MachineType"",
+                    P.""UserTypedTemperature"",
+                    P.""UpDownFill"",
+                    P.""StartReversed"",
+                    P.""CtrlType"",
+                    P.""KMXFill"",
+                    P.""isEPost"",
+  P.""Earthed"",
+                    (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.Density' LIMIT 1) AS ""Density"",
+                    (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.Temperature' LIMIT 1) AS ""Temperature"",
+                    (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.LabDensity' LIMIT 1) AS ""LabDensity"",
+                    (SELECT I.""Item"" FROM ""Items"" I WHERE I.""Name"" = 'Post' || P.""Post""::text || '.LabTemperature' LIMIT 1) AS ""LabTemperature"",
+                    (SELECT CASE WHEN COUNT(DISTINCT T.""Tank"") = 1 THEN MIN(T.""Tank"") ELSE NULL END
+                    FROM ""DTanks"" T
+                    INNER JOIN ""DTubes"" U ON T.""Point"" = U.""Point1""
+                    WHERE U.""Point2"" = P.""Point"") AS ""Tank"",
+                    (SELECT H.""Number""
+                    FROM ""DObjs"" H
+                    INNER JOIN ""Items"" IP
+                    ON IP.""Name"" = 'HydroMeter' || H.""Number""::text || '.Point'
+                    AND IP.""Item"" = P.""Point"" -- заменил ItemTimeToVal, см. выше
+                    WHERE H.""ClassName"" = 'HydroMeter'
+                    LIMIT 1) AS ""HydroMeter"",
+                    (SELECT X.""ValN""
+                    FROM ""DObjs"" O
+                    LEFT JOIN ""Items"" IPt
+                    ON IPt.""Name"" = 'Post' || O.""Number""::text || '.PointOut'
+                    LEFT JOIN ""DObjsEx"" X
+                    ON X.""Obj"" = O.""Obj"" AND X.""Param"" = 'MType'
+                    WHERE O.""ClassName"" = 'Mixer' AND O.""Number"" = P.""Post""
+                    LIMIT 1) AS ""MType"",
+                    P.""LastRecordBUIJournal"",
+                    P.""TotalVLast""
+                    FROM ""DPosts"" P
+                    ORDER BY P.""Place"", P.""Post"";";
 
-        await using var cmd = new NpgsqlCommand(sql, conn);
-    await using var reader = await cmd.ExecuteReaderAsync();
+         await using var cmd = new NpgsqlCommand(sql, conn);
+         await using var reader = await cmd.ExecuteReaderAsync();
 
     while (await reader.ReadAsync())
     {
@@ -473,15 +478,16 @@ ORDER BY P.""Place"", P.""Post"";";
             CtrlType = reader.IsDBNull(11) ? null : reader.GetInt16(11),
             KMXFill = reader.IsDBNull(12) ? null : reader.GetBoolean(12),
             IsEPost = reader.IsDBNull(13) ? null : reader.GetInt16(13),
-            Density = reader.IsDBNull(14) ? null : reader.GetInt16(14),
-            Temperature = reader.IsDBNull(15) ? null : reader.GetInt16(15),
-            LabDensity = reader.IsDBNull(16) ? null : reader.GetInt16(16),
-            LabTemperature = reader.IsDBNull(17) ? null : reader.GetInt16(17),
-            Tank = reader.IsDBNull(18) ? null : reader.GetInt32(18),
-            HydroMeter = reader.IsDBNull(19) ? null : reader.GetInt32(19),
-            MType = reader.IsDBNull(20) ? null : reader.GetInt32(20),
-            LastRecordBUIJournal = reader.IsDBNull(21) ? null : reader.GetInt64(21),
-            TotalVLast = reader.IsDBNull(22) ? null : reader.GetDecimal(22),
+            Earthed = reader.GetInt16(14),
+            Density = reader.IsDBNull(15) ? null : reader.GetInt16(15),
+            Temperature = reader.IsDBNull(16) ? null : reader.GetInt16(16),
+            LabDensity = reader.IsDBNull(17) ? null : reader.GetInt16(17),
+            LabTemperature = reader.IsDBNull(18) ? null : reader.GetInt16(18),
+            Tank = reader.IsDBNull(19) ? null : reader.GetInt32(19),
+            HydroMeter = reader.IsDBNull(20) ? null : reader.GetInt32(20),
+            MType = reader.IsDBNull(21) ? null : reader.GetInt32(21),
+            LastRecordBUIJournal = reader.IsDBNull(22) ? null : reader.GetInt64(22),
+            TotalVLast = reader.IsDBNull(23) ? null : reader.GetDecimal(23),
             OriginalPost = reader.GetInt16(1),
             //FactWProdTypesLookup = Lookups.FactWProdTypes,
             //ProdColorsLookup = Lookups.ProdColors
@@ -805,4 +811,38 @@ ORDER BY P.""Place"", P.""Post"";";
 
         return reports;
     }
+    public async Task<List<TaskModel>> GetTasksAsync()
+    {
+        await using var connection = await dataSource.OpenConnectionAsync();
+        string sql = @"SELECT ""RecTime"",""Doc"", ""Product"",""Direction"", ""Machine"", ""Tank"", ""Driver"", ""DocV"", ""DocW"", ""DocD"", ""State"", ""Receipt""
+                        FROM ""JobsN"" ORDER BY ""RecTime"";";
+        await using var cmd = new NpgsqlCommand(sql, connection);
+        await using var reader = await cmd.ExecuteReaderAsync();
+        var taskList = new List<TaskModel>();
+        while (await reader.ReadAsync())
+        {
+            taskList.Add( new TaskModel
+            {
+                Time = reader.GetDateTime("RecTime").ToString("yyyy-MM-dd HH:mm:ss"),
+                TDoc = reader.GetString("Doc"),
+                Product = reader.GetInt16("Product").ToString(),
+                FlowDirection = reader.GetInt16("Direction").ToString(),
+                Car = reader.GetString("Machine"),
+                Tank = reader.GetInt16("Tank").ToString(),
+                CarDriver = reader.GetString("Driver"),
+                SetTotal_V = reader.GetInt16("DocV").ToString(),
+                Fact_V = reader.GetInt16("DocW").ToString(),
+                SetTotal_M = reader.GetInt16("DocD").ToString(),
+                Fact_M = reader.GetInt16("State").ToString(),
+                SetDensity = reader.GetInt16("Receipt").ToString()
+
+            });
+        }
+        return taskList;
+    }
+
+
+
+   
+
 }

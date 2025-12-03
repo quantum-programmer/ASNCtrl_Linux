@@ -54,7 +54,7 @@
     </UserControl.Styles>
 
     <UserControl.Resources>
-        <conv:EarthToVisibilityConverter x:Key="EarthToVisible" />
+        <conv:EarthedToVisibilityConverter x:Key="EarthedToVisible" />
         <conv:PositiveToBoolConverter x:Key="PositiveToBool" />
     </UserControl.Resources>
 
@@ -214,7 +214,7 @@
                                                      Text="{Binding Side}"
                                                      Width="227" 
                                                      Height="40"
-                                                     BorderThickness="2 2 2 0" 
+                                                     BorderThickness="2 2 2 2" 
                                                      BorderBrush="#4D4D4D"
                                                      FontWeight="900" 
                                                      FontFamily="arial" 
@@ -234,12 +234,13 @@
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
                                                         <Border BorderBrush="#4D4D4D"
+                                                                Margin="0,-2,0,0"
                                                                 BorderThickness="2"
-                                                                Tag="{Binding Earth}" Height="150">
+                                                                Tag="{Binding Earthed}">
                                                             <StackPanel>
                                                                 <!-- Развёрнутый пост -->
                                                               
-                                                                <StackPanel IsVisible="{Binding Earth, Converter={StaticResource EarthToVisible}}">
+                                                                <StackPanel IsVisible="{Binding Earthed, Converter={StaticResource EarthedToVisible}}">
                                                                   <Button Command="{Binding SelectPostCommand}" BorderThickness="0">
                                                                     <DockPanel LastChildFill="True"
                                                                                Height="140" 
@@ -306,7 +307,7 @@
                                                                                      VerticalContentAlignment="Center" />
                                                                             <StackPanel Orientation="Vertical">
                                                                                 <TextBox Foreground="Black"
-                                                                                         Text="{Binding PostNumber}"
+                                                                                         Text="{Binding Post}"
                                                                                          Background="#DDDDDD"
                                                                                          Margin="0 0 0 0"
                                                                                          VerticalAlignment="Top"
@@ -369,19 +370,18 @@
 
                                                                 <!-- Свернутый пост -->
                                                                 <StackPanel Orientation="Horizontal"
-                                                                            IsVisible="{Binding Earth, Converter={StaticResource EarthToVisible}, ConverterParameter=invert}">
+                                                                            IsVisible="{Binding Earthed, Converter={StaticResource EarthedToVisible}, ConverterParameter=invert}">
                                                                   <Button Command="{Binding SelectPostCommand}" BorderThickness="0">  
                                                                   <StackPanel>
                                                                         <StackPanel Orientation="Horizontal">
-                                                                            <TextBox Text="{Binding PostNumber}"
+                                                                          <TextBox Text="{Binding Post}"
                                                                                      MinHeight="35" 
                                                                                      MinWidth="46"
-                                                                                     BorderThickness="0 0 2 2"
-                                                                                     Classes="HidePost" />
+                                                                                     BorderThickness="0,0,2,0"
+                                                                                     Classes="HidePost"/>
                                                                             <TextBox Text="{Binding FuelType}"
-                                                                                     BorderThickness="0 0 2 2"
                                                                                      MinHeight="35" 
-                                                                                     Width="179"
+                                                                                     Width="177"
                                                                                      Background="#DDDDDD"
                                                                                      Classes="HidePost" />
                                                                         </StackPanel>
@@ -403,8 +403,7 @@
 
                 <!-- Дозаторы присадок -->
                 <TabItem Header="Дозаторы присадок"
-                         IsVisible="{Binding DispenserGroups.Count, 
-                         Converter={StaticResource PositiveToBool}}">
+                         IsVisible="{Binding DispenserGroups.Count, Converter={StaticResource PositiveToBool}}">
                     <ScrollViewer>
                         <StackPanel Margin="10">
                             <!-- Группировка по Side -->
@@ -439,7 +438,7 @@
                                                             <StackPanel>
                                                                 <!-- Дозатор присадок -->
                                                                 <StackPanel>
-                                                                    <TextBox Text="{Binding PostNumber}"
+                                                                    <TextBox Text="{Binding Post}"
                                                                              FontWeight="Bold"
                                                                              HorizontalAlignment="Center" />
                                                                     <TextBox Text="{Binding VehicleNumber}" />
@@ -514,7 +513,7 @@
                             Orientation="Horizontal"
                             Spacing="5">
                     <TextBlock Text="Пост" Classes="Post"/>
-                    <TextBlock Text="{Binding SelectedPost.PostNumber}"
+                    <TextBlock Text="{Binding SelectedPost.Post}"
                                Classes="Post" />
                     <TextBlock Text="Налив - Ожидание"
                                Classes="Post" />
@@ -1175,20 +1174,22 @@
                         CanUserResizeColumns="True"
                         CanUserSortColumns="False"
                         GridLinesVisibility="All"
-                        Margin="5">
+                        Margin="5"
+                        ItemsSource="{Binding TaskModels}"
+						AutoGenerateColumns="False">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Время" />
-                            <DataGridTextColumn Header="Накл." />
-                            <DataGridTextColumn Header="Продукт" />
-                            <DataGridTextColumn Header="Направ." />
-                            <DataGridTextColumn Header="Машина" />
-                            <DataGridTextColumn Header="Отсек" />
-                            <DataGridTextColumn Header="Водитель" />
-                            <DataGridTextColumn Header="Задано, л" />
-                            <DataGridTextColumn Header="Факт, л" />
-                            <DataGridTextColumn Header="Задано, кг" />
-                            <DataGridTextColumn Header="Факт, кг" />
-                            <DataGridTextColumn Header="Зад. пл-ть" />
+                            <DataGridTextColumn Header="Время" Binding="{Binding Time}"/>
+                            <DataGridTextColumn Header="Накл." Binding="{Binding TDoc}"/>
+                            <DataGridTextColumn Header="Продукт" Binding="{Binding Product}"/>
+                            <DataGridTextColumn Header="Направ." Binding="{Binding FlowDirection}"/>
+                            <DataGridTextColumn Header="Машина" Binding="{Binding Car}"/>
+                            <DataGridTextColumn Header="Отсек" Binding="{Binding Tank}"/>
+                            <DataGridTextColumn Header="Водитель" Binding="{Binding CarDriver}"/>
+                            <DataGridTextColumn Header="Задано, л" Binding= "{Binding SetTotal_V}" />
+                            <DataGridTextColumn Header="Факт, л" Binding= "{Binding Fact_V}" />
+                            <DataGridTextColumn Header="Задано, кг" Binding= "{Binding SetTotal_M}" />
+                            <DataGridTextColumn Header="Факт, кг" Binding= "{Binding Fact_M}" />
+                            <DataGridTextColumn Header="Зад. пл-ть" Binding= "{Binding SetDensity}" />							
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>
@@ -1271,12 +1272,14 @@
                         CanUserSortColumns="False"
                         GridLinesVisibility="All"
                         Height="235"
-                        Margin="5">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Время" />
-                            <DataGridTextColumn Header="Пост" />
-                            <DataGridTextColumn Header="Описание события" />
-                            <DataGridTextColumn Header="Машина." />
+                        Margin="5"
+                        ItemsSource="{Binding EventModels}"
+						AutoGenerateColumns="False">
+						<DataGrid.Columns>
+                            <DataGridTextColumn Header="Время" Binding="{Binding Time}"/>
+                            <DataGridTextColumn Header="Пост" Binding="{Binding Post}"/>
+                            <DataGridTextColumn Header="Описание события" Binding="{Binding Description}"/>
+                            <DataGridTextColumn Header="Машина." Binding="{Binding Car}"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </StackPanel>

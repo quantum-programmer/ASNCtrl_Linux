@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace ARM.Converters
 {
-    public class EarthToVisibilityConverter : IValueConverter
+    public class EarthedToVisibilityConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is int earth)
+            if (value is int earthed)
             {
                 var invert = parameter?.ToString() == "invert";
-                return invert ? earth == 0 : earth == 1;
+                return invert ? earthed == 0 :earthed == 1;
             }
 
             return false;

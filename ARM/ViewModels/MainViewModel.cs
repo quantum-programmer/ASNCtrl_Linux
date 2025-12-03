@@ -1,26 +1,28 @@
-﻿using System.Windows.Input;
-using ARM.ViewModels;
-using Avalonia;
-using Avalonia.Controls.ApplicationLifetimes;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using ARM.Views;
-using System.Collections.ObjectModel;
-using ARM.Models;
+﻿using ARM.Models;
 using ARM.Services;
-using System.Linq;
-using System;
-using System.Reflection.Metadata;
-using System.Threading.Tasks;
-using MsBox.Avalonia;
-using System.Collections.Generic;
-using Serilog;
-using System.Diagnostics;
+using ARM.ViewModels;
+using ARM.Views;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MsBox.Avalonia;
+using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace ARM.ViewModels;
 
@@ -43,15 +45,66 @@ public partial class MainViewModel : ViewModelBase
     public MainViewModel(PostgresDBService dbService)
     {
         _dbService = dbService;
+        //асинхронный вызов
+        var task = Task.Run(() => myGetTasksAsync());
+
         LoadPostsAsync();
         LoadListReports();
+        
+        
+    }
+    //Заполнение ObservableCollection в асинхронном режиме
+    private async Task AddTasksBatchAsync(List<TaskModel> tasks)
+    {
+        await Dispatcher.UIThread.InvokeAsync(() =>
+        {
+            foreach (var task in tasks)
+            {
+                TaskModels.Add(task);
+            }
+        });
     }
 
-
-
-    //генерация постов + сайд
-    private async void LoadPostsAsync()
+    private async Task myGetTasksAsync()
     {
+        //тест вызова асинхронного режима
+        //Debug.WriteLine("LoadPostsAsync started");
+        //Thread.Sleep(15000);
+        //Debug.WriteLine("LoadPostsAsync stop");
+        //return;
+        var post123 = await _dbService.LoadPostsAsync();
+        var tempTasks = _dbService.GetTasksAsync().Result;
+        await AddTasksBatchAsync(tempTasks);
+
+
+        //EventModels.Add(new EventModel
+        //{
+        //    Time = "10:30",
+        //    Post = "Пост 1",
+        //    Description = "Запуск системы",
+        //    Car = "А456ЕВ 57"
+        //});
+     }
+
+
+    // подключение событий
+    public ObservableCollection<TaskModel> TaskModels { get; } = new ObservableCollection<TaskModel>();
+
+    public ObservableCollection<EventModel> EventModels { get; } = new ObservableCollection<EventModel>();
+
+   
+
+
+
+
+//генерация постов + сайд
+private async void LoadPostsAsync()
+    {
+        //тест вызова асинхронного режима
+        //Debug.WriteLine("LoadPostsAsync started");
+        //Thread.Sleep(15000);
+        //Debug.WriteLine("LoadPostsAsync stop");
+        //return;
         var post123 = await _dbService.LoadPostsAsync();//удалить, оставил для коннекта до создания авторизации пользователя 
         List<PostModel> postList = null;
         try
@@ -102,7 +155,7 @@ public partial class MainViewModel : ViewModelBase
                 DispenserGroups.Add(group);
         }
     }
-
+    // async + void бесполезная catch (Exception ex) уйдет в никуда
     private async void LoadListReports()
     {
         try

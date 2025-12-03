@@ -24,6 +24,7 @@
         <Setter Property="FontSize" Value="17" />
         <Setter Property="BorderBrush" Value="#424242" />
         <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Padding" Value="0"/>
     </Style>
     <Style Selector="Button:pointerover/template/ ContentPresenter">
         <Setter Property="BorderBrush" Value="#CCCCCC" />
@@ -429,13 +430,11 @@
     <!--Уменьшить border когда заземление 0-->
     <Style Selector="Border[Tag=1]">
         <Setter Property="Width" Value="227" />
-        <Setter Property="Height" Value="140" />
         <Setter Property="BorderThickness" Value="2 2 2 2" />
     </Style>
 
     <Style Selector="Border[Tag=0]">
         <Setter Property="Width" Value="227" />
-        <Setter Property="Height" Value="74" />
     </Style>
 
    <!--Когда пост свернут--> 
@@ -447,5 +446,12 @@
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="BorderBrush" Value="#424242"/>
         <Setter Property="CornerRadius" Value="0"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="IsHitTestVisible" Value="False" />
     </Style>
+  <Style Selector="TextBlock.HidePost">
+    <Setter Property="FontFamily" Value="Arial"/>
+    <Setter Property="FontSize" Value="20"/>
+    <Setter Property="FontWeight" Value="700"/>
+  </Style>
 </Styles>

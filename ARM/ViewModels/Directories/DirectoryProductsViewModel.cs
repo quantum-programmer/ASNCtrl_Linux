@@ -29,7 +29,7 @@ namespace ARM.ViewModels.Directories
             DeleteCommand = new RelayCommand(async () => await OnDeleteAsync(), () => SelectedProduct != null);
             CancelCommand = new RelayCommand(OnCancel);
 
-            LoadDataAsync();
+            _ = LoadProductsAsync();
         }
 
         public ObservableCollection<ProductModel> Products { get; }
@@ -43,11 +43,6 @@ namespace ARM.ViewModels.Directories
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
         public ICommand CancelCommand { get; }
-
-        private async void LoadDataAsync()
-        {
-            await LoadProductsAsync();
-        }
 
         private async Task LoadProductsAsync()
         {
@@ -84,27 +79,25 @@ namespace ARM.ViewModels.Directories
 
         private async Task OnSaveAsync()
         {
-            var item = SelectedProduct;
-            if (item == null)
-                return;
-
-            // новая строка = та, что была создана OnAdd
-            var isNew = ReferenceEquals(item, _addedItem) || item.Product == 0;
-
-            if (isNew)
+            foreach (var item in Products)
             {
-                // если БД генерит Id — верни его из Insert и проставь в модель
-                var newProduct = await _dbService.InsertProductAsync(item);
-                if (newProduct > 0)
-                    item.Product = newProduct;
+                if (item.Product == 0)
+                {
+                    var newId = await _dbService.InsertProductAsync(item);
+                    if (newId > 0)
+                        item.Product = item.OriginalProduct = newId;
+                }
+                else
+                {
+                    await _dbService.UpdateProductAsync(item);
+                    item.OriginalProduct = item.Product;
+                }
+            }
 
-                _addedItem = null; // помечаем, что это больше не «новая» строка
-            }
-            else
-            {
-                await _dbService.UpdateProductAsync(item);
-            }
+            _addedItem = null;
+            await LoadProductsAsync();
         }
+
         private async Task OnDeleteAsync()
         {
             if (SelectedProduct == null)

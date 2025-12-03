@@ -36,7 +36,7 @@ namespace ARM.ViewModels.Directories
             DeleteCommand = new RelayCommand(async () => await OnDeleteAsync(), () => SelectedPost != null);
             CancelCommand = new RelayCommand(OnCancel);
 
-            LoadDataAsync();
+            _ = LoadPostsAsync();
         }
 
         public ObservableCollection<PostModel> Posts { get; }
@@ -51,12 +51,8 @@ namespace ARM.ViewModels.Directories
         public ICommand DeleteCommand { get; }
         public ICommand CancelCommand { get; }
 
-        private async void LoadDataAsync()
-        {
-            await LoadPostssAsync();
-        }
 
-        private async Task LoadPostssAsync()
+        private async Task LoadPostsAsync()
         {
             var posts = await _dbService.GetPostsAsync();
             Posts.Clear();
@@ -126,7 +122,7 @@ namespace ARM.ViewModels.Directories
             {
                 await _dbService.UpdatePostAsync(item);
             }
-            LoadDataAsync();
+            await LoadPostsAsync();
         }
 
         private async Task OnDeleteAsync()

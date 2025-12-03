@@ -95,11 +95,13 @@ namespace ARM.ViewModels.Directories
                     item.Tank = (short)newId;
                     item.OriginalTank = item.Tank;
                 }
+
                 _addedItem = null;
             }
             else
             {
                 await _dbService.UpdateTankAsync(item);
+                item.OriginalTank = item.Tank;
             }
 
             await LoadDataAsync();
